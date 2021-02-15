@@ -103,6 +103,21 @@ export class ReadingReportComponent implements OnInit {
           credits: {
             enabled: false
           },
+          exporting: {
+            enabled: true
+          },
+          navigator: {
+            xAxis: {
+              events: {
+                afterSetExtremes: function (e) {
+                  console.log(e);
+                },
+                setExtremes: function (e) {
+                  console.log('sdfsdf' + e);
+                },
+              }
+            }
+          }
         };
       });
     }

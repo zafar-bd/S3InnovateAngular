@@ -1,0 +1,40 @@
+<div class="row">
+  <div class="col-12 text-center py-4 page-title">
+    <h3>Data Readings</h3>
+  </div>
+</div>
+
+<div class="row">
+
+  <div class="col-2">
+    <select [(ngModel)]="buildingId" name="buildingId" class="form-select">
+      <option value="">--Select Building--</option>
+      <option *ngFor="let item of buildings" [value]="item.id"> {{ item.name }}</option>
+    </select>
+  </div>
+  <div class="col-2">
+    <select [(ngModel)]="objectId" name="objectId" class="form-select">
+      <option value="">--Select Object--</option>
+      <option *ngFor="let item of objects" [value]="item.id"> {{ item.name }}</option>
+    </select>
+  </div>
+  <div class="col-2">
+    <select [(ngModel)]="dataFieldId" name="dataFieldId" class="form-select">
+      <option value="">-- Datafield--</option>
+      <option *ngFor="let item of dataFields" [value]="item.id"> {{ item.name }}</option>
+    </select>
+  </div>
+
+  <div class="col-4">
+    <input type="text" [locale]="{format: 'YYYY-MM-DD'}" ngxDaterangepickerMd [(ngModel)]="dateRange"
+      class="form-control" />
+  </div>
+
+  <div class="col-2">
+    <button (click)="search()" class="btn btn-success">Search</button>
+  </div>
+</div>
+
+<highcharts-chart [Highcharts]="Highcharts" [constructorType]="'stockChart'" [options]="chartOptions"
+  style="width: 100%; height: 400px; display: block;">
+</highcharts-chart>

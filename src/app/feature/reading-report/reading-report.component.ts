@@ -3,7 +3,6 @@ import { Component, OnInit, Injectable, ViewEncapsulation } from '@angular/core'
 import HC_stock from 'highcharts/modules/stock';
 HC_stock(Highcharts);
 import { HttpClient } from '@angular/common/http';
-import { FormBuilder } from '@angular/forms';
 import { Moment } from 'moment';
 import * as moment from 'moment';
 
@@ -73,6 +72,12 @@ export class ReadingReportComponent implements OnInit {
   };
 
   search() {
+
+    var addedOneMonth = moment(this.dateRange.startDate).add(1, 'M');
+    if (moment(this.dateRange.endDate) > addedOneMonth) {
+      this.dateRange.endDate = addedOneMonth;
+    }
+
     var url = this.apiServer
       + 'readings?buildingId=' + this.buildingId
       + '&objectId=' + this.objectId
@@ -81,29 +86,25 @@ export class ReadingReportComponent implements OnInit {
       + '&toDate=' + moment(this.dateRange.endDate).format('YYYY-MM-DD');
     //var url = "http://localhost:58608/api/readings?BuildingId=1&ObjectId=1&DataFieldId=1&FromDate=2019-06-01&ToDate=2019-10-01";
 
-    var addedOneMonth = moment(this.dateRange.startDate).add(1, 'M');
-    if (moment(this.dateRange.endDate) > addedOneMonth)
-      this.dateRange.endDate = addedOneMonth;
-
     if (this.dateRange.startDate && this.dateRange.endDate) {
-    this.getReadings(url).then((res: any) => {
-      this.chartOptions = {
-        series: [
-          {
-            name: 'Reading',
-            type: 'line',
-            data: res,
-            tooltip: {
-              valueDecimals: 1,
-              valueSuffix: ''
+      this.getReadings(url).then((res: any) => {
+        this.chartOptions = {
+          series: [
+            {
+              name: 'Reading',
+              type: 'line',
+              data: res,
+              tooltip: {
+                valueDecimals: 1,
+                valueSuffix: ''
+              }
             }
-          }
-        ],
-        credits: {
-          enabled: false
-        },
-      };
-    });
+          ],
+          credits: {
+            enabled: false
+          },
+        };
+      });
     }
     else {
       alert("Select date range please!")

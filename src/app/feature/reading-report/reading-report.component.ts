@@ -43,7 +43,8 @@ export class ReadingReportComponent implements OnInit {
     return new Promise((resolve, reject) => {
       this.http.get(url).subscribe((res: any) => {
         res.forEach((r: any) => {
-          var arr = [new Date(r.timestamp).getTime(), r.value];
+          //var arr = [new Date(r.timestamp).getTime(), r.value];
+          var arr = [r.timestamp, r.value];
           this.readings.push(arr);
         });
         resolve(this.readings);
@@ -78,26 +79,31 @@ export class ReadingReportComponent implements OnInit {
       + '&dataFieldId=' + this.dataFieldId
       + '&fromDate=' + moment(this.dateRange.startDate).format('YYYY-MM-DD')
       + '&toDate=' + moment(this.dateRange.endDate).format('YYYY-MM-DD');
-    //url = "http://localhost:58608/api/readings?BuildingId=1&ObjectId=1&DataFieldId=1&FromDate=2019-06-01&ToDate=2019-06-01";
+    //var url = "http://localhost:58608/api/readings?BuildingId=1&ObjectId=1&DataFieldId=1&FromDate=2019-06-01&ToDate=2019-10-01";
+
+    var addedOneMonth = moment(this.dateRange.startDate).add(1, 'M');
+    if (moment(this.dateRange.endDate) > addedOneMonth)
+      this.dateRange.endDate = addedOneMonth;
+
     if (this.dateRange.startDate && this.dateRange.endDate) {
-      this.getReadings(url).then((res: any) => {
-        this.chartOptions = {
-          series: [
-            {
-              name: 'Reading',
-              type: 'line',
-              data: res,
-              tooltip: {
-                valueDecimals: 1,
-                valueSuffix: ''
-              }
+    this.getReadings(url).then((res: any) => {
+      this.chartOptions = {
+        series: [
+          {
+            name: 'Reading',
+            type: 'line',
+            data: res,
+            tooltip: {
+              valueDecimals: 1,
+              valueSuffix: ''
             }
-          ],
-          credits: {
-            enabled: false
-          },
-        };
-      });
+          }
+        ],
+        credits: {
+          enabled: false
+        },
+      };
+    });
     }
     else {
       alert("Select date range please!")
